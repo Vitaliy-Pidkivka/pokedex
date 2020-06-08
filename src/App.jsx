@@ -1,13 +1,11 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import Button from '@material-ui/core/Button'
-import {createKey, isEmpty} from './utils/helpers'
+import { makeStyles } from '@material-ui/styles'
+
 import usePokemonList from './hooks/usePokemonList'
 import PokemonPreview from './components/PokemonPreview'
 import PokemonDetails from './components/PokemonDetails'
-import {makeStyles} from '@material-ui/styles'
-import { useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-
+import { createKey, isEmpty } from './utils/helpers'
 
 const useStyles = makeStyles({
     appWrapper: {

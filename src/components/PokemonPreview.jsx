@@ -1,8 +1,9 @@
 import React from 'react'
 import {createKey} from '../utils/helpers'
-import usePokemonDetails from '../hooks/usePokemonDetails'
 import {makeStyles} from '@material-ui/styles'
-import PokemonTypeButton from "./PokemonTypeButton";
+
+import usePokemonDetails from '../hooks/usePokemonDetails'
+import PokemonTypeButton from './PokemonTypeButton'
 
 const useStyles = makeStyles( {
     pokemon: {
@@ -33,7 +34,6 @@ const useStyles = makeStyles( {
 });
 
 const PokemonPreview = ({filter, name, setFilter, setPokemon}) => {
-
     const classes = useStyles()
     const pokemonDetails = usePokemonDetails(name)
     const {sprites = {}, types = []} = pokemonDetails
@@ -52,8 +52,9 @@ const PokemonPreview = ({filter, name, setFilter, setPokemon}) => {
                     onClick={setPokemonDetails}
                     src={front_default}
                 />
-                <div onClick={setPokemonDetails}
-                     className={classes.name}
+                <div
+                  className={classes.name}
+                  onClick={setPokemonDetails}
                 >
                     {name}
                 </div>
@@ -73,7 +74,7 @@ const PokemonPreview = ({filter, name, setFilter, setPokemon}) => {
                         >
                             {type}
                         </PokemonTypeButton>
-                        ))}
+                    ))}
                 </div>
             </div>
         </div>

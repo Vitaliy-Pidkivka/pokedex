@@ -3,6 +3,8 @@ import CardContent from '@material-ui/core/CardContent'
 import Card from '@material-ui/core/Card'
 import Typography from '@material-ui/core/Typography'
 import {makeStyles} from '@material-ui/styles'
+import PokemonStat from './PokemonStat'
+import {createKey} from '../utils/helpers'
 
 const useStyles = makeStyles({
     root: {
@@ -29,60 +31,66 @@ const useStyles = makeStyles({
     boldFont: {
         fontWeight: 'bold',
         textTransform: 'capitalize',
-    } ,
+    },
     infoWrapper: {
         display: 'flex',
         justifyContent: 'space-between',
         borderBottom: '1px solid gray',
     },
 });
-const PokemonDetails = ({pokemon}) => {
-    debugger
 
+const LABELS = {
+    base_experience: 'Base experience',
+    height: 'Height',
+    typeNames: 'Type',
+    totalMoves: 'Total moves',
+    weight: 'Weight',
+}
+
+const PokemonDetails = ({pokemon}) => {
     const classes = useStyles()
-    const {name, sprites = {}, types = [], weight, height,base_experience} = pokemon
+    const {base_experience, height, name, moves = [], sprites = {}, stats, types = [], weight} = pokemon
     const {front_default = ''} = sprites
+    const totalMoves = moves.length
+    const typeNames = types.map(({type}) => type.name).join(', ')
+    const baseInfo = {base_experience, height, totalMoves, typeNames, weight}
     return (
-            <Card className={classes.root} variant="outlined">
-                <CardContent className={classes.content}>
-                    <Typography color='textSecondary'
-                                className={classes.picture}
-                                component='div'
-                                gutterBottom>
-                        <img alt={name} src={front_default}/>
-                    </Typography>
-                    <Typography variant='h5'
-                                component='h1'
-                                className={`${classes.name} ${classes.pos}`}
-                    >
-                        {name}
-                    </Typography>
-                    <Typography color='textSecondary'
-                                className={classes.infoWrapper}
-                    >
-                        <span className={classes.boldFont}>Weight: </span><span>{weight}</span>
-                    </Typography>
-                    <Typography color='textSecondary'
-                                className={classes.infoWrapper}
-                    >
-                        <span className={classes.boldFont}>Height: </span><span>{height}</span>
-                    </Typography>
-                    <Typography color='textSecondary'
-                                className={classes.infoWrapper}
-                    >
-                        <span className={classes.boldFont}>Base experience: </span><span>{base_experience}</span>
-                    </Typography>
-                    {pokemon.stats.map(stat => {
-                        return (
-                            <Typography color='textSecondary'
-                                        className={classes.infoWrapper}
-                            >
-                                <span className={classes.boldFont}>{stat.stat.name}: </span><span>{stat.base_stat}</span>
-                            </Typography>
-                        )
-                    })}
-                </CardContent>
-            </Card>
+        <Card className={classes.root} variant="outlined">
+            <CardContent className={classes.content}>
+                <Typography
+                    gutterBottom
+                    className={classes.picture}
+                    color='textSecondary'
+                    component='div'
+                >
+                    <img alt={name} src={front_default}/>
+                </Typography>
+                <Typography
+                    className={`${classes.name} ${classes.pos}`}
+                    component='h1'
+                    variant='h5'
+                >
+                    {name}
+                </Typography>
+                {Object.keys(baseInfo).map((key, index) => (
+                    <PokemonStat
+                        classes={classes}
+                        label={LABELS[key]}
+                        key={createKey(key, index)}
+                        value={baseInfo[key]}
+                    />
+                ))}
+                {stats.map(({base_stat, stat: {name}}, index) => (
+                    <PokemonStat
+                        classes={classes}
+                        key={createKey(name, index)}
+                        label={name}
+                        value={base_stat}
+                    />
+                ))}
+
+            </CardContent>
+        </Card>
     )
 }
 
