@@ -1,84 +1,36 @@
 import React from 'react'
-import Button from '@material-ui/core/Button'
-import {withStyles} from '@material-ui/core/styles';
-import {green, purple, red, blue} from '@material-ui/core/colors';
-import TableCell from '@material-ui/core/TableCell';
-import TableRow from '@material-ui/core/TableRow';
 import {createKey} from '../utils/helpers'
 import usePokemonDetails from '../hooks/usePokemonDetails'
-import {makeStyles} from "@material-ui/styles";
+import {makeStyles} from '@material-ui/styles'
+import PokemonTypeButton from "./PokemonTypeButton";
 
-
-const useStyles = makeStyles((theme) => ({
-    margin: {
-        margin: '0 0 5px 10px',
+const useStyles = makeStyles( {
+    pokemon: {
+        flex: '1 1 33.333%',
+        boxSizing: 'border-box',
+        padding: 10,
     },
-    cursor: {
+    pokemonInner: {
+        padding: 5,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        boxShadow: '0 0 10px gray'
+    },
+    picture: {
         cursor: 'pointer',
     },
-    background:{
-        transition: 'all .3s ease',
-        '&:hover': {
-            backgroundColor: '#cadde3',
-        },
+    name: {
+        fontSize: 16,
+        fontWeight: 900,
+        textTransform: 'capitalize',
+        cursor: 'pointer',
+        marginBottom: 10,
     },
-    height: {
-        height: 63
+    margin: {
+        margin: '0 5px 5px 0',
     },
-    padding: {
-        padding: 5,
-    }
-}));
-
-
-
-const GreenButton = withStyles((theme) => ({
-    root: {
-        color: theme.palette.getContrastText(green[500]),
-        backgroundColor: green[500],
-        '&:hover': {
-            backgroundColor: green[700],
-        },
-    },
-}))(Button);
-const GreenLightButton = withStyles((theme) => ({
-    root: {
-        color: theme.palette.getContrastText(green[300]),
-        backgroundColor: green[300],
-        '&:hover': {
-            backgroundColor: green[500],
-        },
-    },
-}))(Button);
-
-const RedButton = withStyles((theme) => ({
-    root: {
-        color: theme.palette.getContrastText(red[500]),
-        backgroundColor: red[500],
-        '&:hover': {
-            backgroundColor: red[700],
-        },
-    },
-}))(Button);
-
-const BlueButton = withStyles((theme) => ({
-    root: {
-        color: theme.palette.getContrastText(blue[500]),
-        backgroundColor: blue[500],
-        '&:hover': {
-            backgroundColor: blue[700],
-        },
-    },
-}))(Button);
-const PurpleLightButton = withStyles((theme) => ({
-    root: {
-        color: theme.palette.getContrastText(purple[300]),
-        backgroundColor: purple[300],
-        '&:hover': {
-            backgroundColor: purple[500],
-        },
-    },
-}))(Button);
+});
 
 const PokemonPreview = ({filter, name, setFilter, setPokemon}) => {
 
@@ -91,130 +43,40 @@ const PokemonPreview = ({filter, name, setFilter, setPokemon}) => {
     if (filter && !typesList.includes(filter)) return null
 
     const setPokemonDetails = () => setPokemon(pokemonDetails)
-
     return (
-
-        <TableRow className={classes.background}>
-            <TableCell className={classes.padding}>
+        <div className={classes.pokemon}>
+            <div className={classes.pokemonInner}>
                 <img
-                    className={`${classes.cursor} ${classes.height} `}
+                    className={classes.picture}
                     alt={name}
                     onClick={setPokemonDetails}
                     src={front_default}
                 />
-            </TableCell>
-            <TableCell align='right'>
                 <div onClick={setPokemonDetails}
-                     className={`${classes.cursor} ${classes.padding}`}
+                     className={classes.name}
                 >
                     {name}
                 </div>
-            </TableCell>
-            <TableCell align='right'
-                       className={`${classes.padding}`}
-            >
-                {typesList.map((type, index) => {
-                    if (type === 'grass') {
-                        return (
-                            <GreenButton
-                                className={classes.margin}
-                                variant='contained'
-                                key={createKey(type, index)}
-                                onClick={() => {
-                                    const filterToSet = type === filter
-                                        ? ''
-                                        : type
-                                    setFilter(filterToSet)
-                                }}
-                            >
-                                {type}
-                            </GreenButton>)
-                    }
-                    if (type === 'water') {
-                        return (
-                            <BlueButton
-                                className={classes.margin}
-                                variant='contained'
-                                key={createKey(type, index)}
-                                onClick={() => {
-                                    const filterToSet = type === filter
-                                        ? ''
-                                        : type
-                                    setFilter(filterToSet)
-                                }}
-                            >
-                                {type}
-                            </BlueButton>)
-                    }
-
-                    if (type === 'fire') {
-                        return (
-                            <RedButton
-                                className={classes.margin}
-                                variant='contained'
-                                key={createKey(type, index)}
-                                onClick={() => {
-                                    const filterToSet = type === filter
-                                        ? ''
-                                        : type
-                                    setFilter(filterToSet)
-                                }}
-                            >
-                                {type}
-                            </RedButton>)
-                    }
-                    if (type === 'poison') {
-                        return (
-                            <GreenLightButton
-                                className={classes.margin}
-                                variant='contained'
-                                key={createKey(type, index)}
-                                onClick={() => {
-                                    const filterToSet = type === filter
-                                        ? ''
-                                        : type
-                                    setFilter(filterToSet)
-                                }}
-                            >
-                                {type}
-                            </GreenLightButton>)
-                    }
-                    if (type === 'flying') {
-                        return (
-                            <PurpleLightButton
-                                className={classes.margin}
-                                variant='contained'
-                                key={createKey(type, index)}
-                                onClick={() => {
-                                    const filterToSet = type === filter
-                                        ? ''
-                                        : type
-                                    setFilter(filterToSet)
-                                }}
-                            >
-                                {type}
-                            </PurpleLightButton>)
-                    }
-
-                    return (
-                        <Button
+                <div>
+                    {typesList.map((type, index) => (
+                        <PokemonTypeButton
                             className={classes.margin}
-                            color='primary'
+                            variant='contained'
                             key={createKey(type, index)}
+                            type={type}
                             onClick={() => {
                                 const filterToSet = type === filter
                                     ? ''
                                     : type
                                 setFilter(filterToSet)
                             }}
-                            variant='contained'
                         >
                             {type}
-                        </Button>
-                    )
-                })}
-            </TableCell>
-        </TableRow>
+                        </PokemonTypeButton>
+                        ))}
+                </div>
+            </div>
+        </div>
     )
 }
 

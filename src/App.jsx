@@ -1,29 +1,40 @@
 import React, {useState} from 'react'
 import Button from '@material-ui/core/Button'
-import Table from '@material-ui/core/Table';
-import TableContainer from '@material-ui/core/TableContainer';
 import {createKey, isEmpty} from './utils/helpers'
 import usePokemonList from './hooks/usePokemonList'
 import PokemonPreview from './components/PokemonPreview'
 import PokemonDetails from './components/PokemonDetails'
-import {makeStyles} from "@material-ui/styles";
-import {Paper} from "@material-ui/core";
-import TableBody from "@material-ui/core/TableBody";
-import TableRow from "@material-ui/core/TableRow";
-import TableHead from "@material-ui/core/TableHead";
-import TableCell from "@material-ui/core/TableCell";
+import {makeStyles} from '@material-ui/styles'
+import { useTheme } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
 
 const useStyles = makeStyles({
-    tableContainer: {
-        maxHeight: 462,
+    appWrapper: {
+        display: 'flex',
     },
-    table: {},
-    tableHeader: {},
+    contentWrapper: {
+        display: 'flex',
+        flex: '0 1 50%',
+        flexWrap: 'wrap',
+
+    },
+    pokemonList: {
+        display: 'flex',
+        flex: '0 1 100%',
+        flexWrap: 'wrap',
+        boxSizing: 'border-box',
+        height: 'calc(100vh - 76px)',
+        overflowY: 'scroll',
+        justifyContent: 'center',
+    },
     moreBtn: {
-        position: 'fixed',
-        bottom: '15px',
-        left: '50%',
-        transform: 'translate(-50%, 0)'
+        flex: '1 0 auto',
+        marginTop: 20,
+        padding: 16,
+        color: '#fff',
+        background: '#328df6',
+        margin: 10,
     }
 });
 
@@ -34,39 +45,29 @@ const App = ({}) => {
     const {pokemonList, setNextPage} = usePokemonList()
 
     return (
-        <div>
+        <div className={classes.appWrapper}>
+            <div className={classes.contentWrapper}>
+                <div  className={classes.pokemonList}>
+                    {pokemonList.map(({name}, index) => (
+                        <PokemonPreview
+                            key={createKey(name, index)}
+                            {...{filter, name, setFilter, setPokemon}}
+                        />
+                    ))}
+                </div>
+                <Button
+                    className={classes.moreBtn}
+                    color='primary'
+                    variant='contained'
+                    onClick={setNextPage}
+                >
+                    Load more
+                </Button>
+            </div>
             {!isEmpty(pokemon) && (
-                <PokemonDetails pokemon={pokemon}/>
+                <PokemonDetails
+                    pokemon={pokemon}/>
             )}
-            <TableContainer component={Paper}
-                            className={classes.tableContainer}
-            >
-                <Table className={classes.table} stickyHeader aria-label="sticky table">
-                    <TableHead className={classes.tableHeader}>
-                        <TableRow>
-                            <TableCell>Visual</TableCell>
-                            <TableCell align="right">Name</TableCell>
-                            <TableCell align="right">Types-filter</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {pokemonList.map(({name}, index) => (
-                            <PokemonPreview
-                                key={createKey(name, index)}
-                                {...{filter, name, setFilter, setPokemon}}
-                            />
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <Button
-                className={classes.moreBtn}
-                color='primary'
-                variant='contained'
-                onClick={setNextPage}
-            >
-                Load more
-            </Button>
         </div>
     )
 }
